@@ -1,4 +1,4 @@
-cmake_minimum_required (VERSION 2.6)
+cmake_minimum_required(VERSION 2.8.11)
 
 # set project's name
 set (PROJECT easypaint)
@@ -7,7 +7,8 @@ message(STATUS "System: " ${CMAKE_HOST_SYSTEM_NAME} " " ${CMAKE_HOST_SYSTEM_VERS
 message(STATUS "Processor: " ${CMAKE_HOST_SYSTEM_PROCESSOR})
 
 # add version define
-set(EASYPAINT_VERSION 0.1.1)
+set(EASYPAINT_VERSION 0.5)
+add_definitions(-DAPP_VERSION="${EASYPAINT_VERSION}")
 
 #------- headers --------
 set (HEADERS
@@ -116,11 +117,12 @@ project (${PROJECT})
 
 include_directories (./)
 
-find_package (Qt4 REQUIRED)
-include (${QT_USE_FILE})
-qt4_add_resources (QRC_SOURCES ${RESOURCES})
-qt4_wrap_cpp (MOC_SOURCES ${HEADERS})
-qt4_add_translation( TRANSLATIONS_QM ${TRANSLATIONS} )
+find_package(Qt5Widgets 5.2.0 REQUIRED)
+find_package(Qt5PrintSupport 5.2.0 REQUIRED)
+
+qt5_add_resources (QRC_SOURCES ${RESOURCES})
+qt5_wrap_cpp (MOC_SOURCES ${HEADERS})
+#qt5_add_translation( TRANSLATIONS_QM ${TRANSLATIONS} )
 
 add_definitions (-Wall)
 
@@ -132,7 +134,7 @@ source_group ("Resource Files" FILES ${QRC_SOURCES})
 #-------  build executable from sources ----------
 add_executable (${PROJECT} ${HEADERS} ${SOURCES} ${MOC_SOURCES} ${QRC_SOURCES} ${TRANSLATIONS_QM})
 
-target_link_libraries (${PROJECT} ${QT_LIBRARIES})
+target_link_libraries (${PROJECT} Qt5::Widgets Qt5::PrintSupport)
 
 #-------  installing ----------
 if(UNIX AND NOT APPLE)
